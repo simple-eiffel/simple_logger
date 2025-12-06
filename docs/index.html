@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>simple_logger - Eiffel Logging Library</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Consolas', monospace; }
+        pre { background: #f8f8f8; padding: 15px; border-radius: 5px; overflow-x: auto; border-left: 4px solid #3498db; }
+        pre code { background: none; padding: 0; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #3498db; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .feature-box { background: #e8f4f8; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        a { color: #3498db; }
+    </style>
+</head>
+<body>
+    <h1>simple_logger</h1>
+    <p><strong>Enhanced logging facade for Eiffel with structured fields and JSON output</strong></p>
+    
+    <p><a href="https://github.com/ljr1981/simple_logger">GitHub Repository</a></p>
+
+    <h2>Features</h2>
+    <div class="feature-box">
+        <ul>
+            <li><strong>Structured logging</strong> - Key-value fields in log entries</li>
+            <li><strong>JSON output</strong> - Machine-parseable format for log aggregation</li>
+            <li><strong>Child loggers</strong> - Inherit context fields from parent</li>
+            <li><strong>Enter/exit tracing</strong> - Automatic indentation for call traces</li>
+            <li><strong>Duration logging</strong> - Built-in timer for operation timing</li>
+            <li><strong>Multiple outputs</strong> - Console and file output support</li>
+        </ul>
+    </div>
+
+    <h2>Quick Start</h2>
+    <pre><code>local
+    log: SIMPLE_LOGGER
+do
+    create log.make
+    log.info ("Application started")
+    log.warn ("Low disk space")
+    log.error ("Connection failed")
+end</code></pre>
+
+    <h2>JSON Output</h2>
+    <pre><code>log.set_json_output (True)
+log.info ("Server started")
+-- Output: {"timestamp":"2025-12-06T14:30:00Z","level":"info","message":"Server started"}</code></pre>
+
+    <h2>Log Levels</h2>
+    <table>
+        <tr><th>Level</th><th>Constant</th><th>Use Case</th></tr>
+        <tr><td>DEBUG</td><td><code>Level_debug</code></td><td>Verbose debugging information</td></tr>
+        <tr><td>INFO</td><td><code>Level_info</code></td><td>Normal operational messages</td></tr>
+        <tr><td>WARN</td><td><code>Level_warn</code></td><td>Warning conditions</td></tr>
+        <tr><td>ERROR</td><td><code>Level_error</code></td><td>Error conditions</td></tr>
+        <tr><td>FATAL</td><td><code>Level_fatal</code></td><td>System failure</td></tr>
+    </table>
+
+    <h2>Installation</h2>
+    <pre><code>&lt;library name="simple_logger" location="$SIMPLE_LOGGER\simple_logger.ecf"/&gt;</code></pre>
+    <p>Set environment variable: <code>SIMPLE_LOGGER=D:\prod\simple_logger</code></p>
+
+    <h2>Dependencies</h2>
+    <ul>
+        <li><a href="https://github.com/ljr1981/simple_json">simple_json</a> - For JSON output format</li>
+    </ul>
+
+    <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666;">
+        <p>MIT License - Copyright (c) 2024-2025, Larry Rix</p>
+    </footer>
+</body>
+</html>

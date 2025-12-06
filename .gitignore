@@ -1,0 +1,5 @@
+# EiffelStudio generated
+EIFGENs/
+
+# Logs (don't commit actual log files)
+*.log
