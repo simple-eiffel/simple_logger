@@ -322,7 +322,6 @@ feature -- Child Loggers
 		do
 			create Result.make_child (Current, a_context)
 		ensure
-			result_not_void: Result /= Void
 			inherits_level: Result.level = level
 		end
 
@@ -336,8 +335,6 @@ feature -- Child Loggers
 			create l_context.make (1)
 			l_context.put (a_value, a_key)
 			Result := child (l_context)
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature -- Tracing (Enter/Exit)
