@@ -3,59 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>simple_logger - Documentation</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-            line-height: 1.6;
-            color: #333;
-        }
-        .logo { text-align: center; margin-bottom: 2rem; }
-        .logo img { max-width: 400px; }
-        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem; }
-        h2 { color: #34495e; margin-top: 2rem; }
-        code { background: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
-        pre { background: #f4f4f4; padding: 1rem; border-radius: 5px; overflow-x: auto; }
-        pre code { background: none; padding: 0; }
-        table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
-        th, td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
-        th { background: #f4f4f4; }
-        a { color: #3498db; }
-        .badge { display: inline-block; padding: 0.25rem 0.5rem; background: #3498db; color: white; border-radius: 3px; font-size: 0.8em; }
-    </style>
+    <title>simple_logger - Structured Logging for Eiffel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
-    <div class="logo">
-        <img src="images/logo.png" alt="simple_ library logo">
-    </div>
+    <header>
+        <div class="logo-container">
+            <img src="images/logo.png" alt="simple_* logo" class="logo">
+        </div>
+        <h1>simple_logger</h1>
+        <p class="tagline">Structured Logging with JSON Output for Eiffel</p>
+        <div class="badges">
+            <span class="badge badge-rfc">Foundation Layer</span>
+            <span class="badge badge-version">v1.0.0</span>
+            <span class="badge badge-license">MIT</span>
+        </div>
+    </header>
 
-    <h1>simple_logger</h1>
-    <p><span class="badge">Foundation Layer</span></p>
-    <p>Enhanced logging facade for Eiffel with structured fields, JSON output, child loggers, and timing support.</p>
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#quick-start">Quick Start</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#api">API Reference</a></li>
+            <li><a href="https://github.com/ljr1981/simple_logger">GitHub</a></li>
+        </ul>
+    </nav>
 
-    <h2>Overview</h2>
-    <p>The <code>SIMPLE_LOGGER</code> class provides a clean logging API that wraps EiffelStudio's logging facilities. It adds structured logging with key-value fields, JSON output format, child loggers with inherited context, and built-in timing/tracing support.</p>
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>
+                <strong>simple_logger</strong> provides an enhanced logging facade for Eiffel with 
+                structured fields, JSON output format, child loggers with inherited context, and 
+                built-in timing/tracing support. It wraps EiffelStudio's logging facilities with 
+                a clean, modern API.
+            </p>
+        </section>
 
-    <h2>Features</h2>
-    <table>
-        <tr><th>Feature</th><th>Description</th></tr>
-        <tr><td>Structured logging</td><td>Key-value fields in log entries</td></tr>
-        <tr><td>JSON output</td><td>Machine-parseable format for log aggregation</td></tr>
-        <tr><td>Child loggers</td><td>Inherit context fields from parent</td></tr>
-        <tr><td>Enter/exit tracing</td><td>Automatic indentation for call traces</td></tr>
-        <tr><td>Duration logging</td><td>Built-in timer for operation timing</td></tr>
-        <tr><td>Multiple outputs</td><td>Console and file output support</td></tr>
-    </table>
-
-    <h2>Installation</h2>
-    <pre><code>&lt;library name="simple_logger"
-        location="$SIMPLE_LOGGER\simple_logger.ecf"/&gt;</code></pre>
-
-    <h2>Quick Start</h2>
-    <pre><code>local
+        <section id="quick-start">
+            <h2>Quick Start</h2>
+            <h3>Installation</h3>
+            <pre><code>&lt;library name="simple_logger" location="$SIMPLE_LOGGER\simple_logger.ecf"/&gt;</code></pre>
+            
+            <h3>Basic Usage</h3>
+            <pre><code>local
     log: SIMPLE_LOGGER
 do
     create log.make
@@ -65,76 +58,112 @@ do
     log.warn ("Low disk space")
     log.error ("Connection failed")
     
-    -- With fields
+    -- With structured fields
     log.with_field ("user", "alice")
     log.with_field ("action", "login")
     log.info ("User logged in")
 end</code></pre>
+        </section>
 
-    <h2>JSON Output</h2>
-    <pre><code>log.set_json_output (True)
+        <section id="features">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Structured Logging</h4>
+                    <p>Key-value fields attached to log entries</p>
+                </div>
+                <div class="feature-card">
+                    <h4>JSON Output</h4>
+                    <p>Machine-parseable format for log aggregation</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Child Loggers</h4>
+                    <p>Inherit context fields from parent loggers</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Timing Support</h4>
+                    <p>Built-in timer for operation duration logging</p>
+                </div>
+            </div>
+
+            <h3>JSON Output</h3>
+            <pre><code>log.set_json_output (True)
 log.info ("Server started")
 
 -- Output:
 -- {"timestamp":"2025-12-06T14:30:00Z","level":"info","message":"Server started"}</code></pre>
 
-    <h2>Child Loggers</h2>
-    <pre><code>-- Create child with inherited context
+            <h3>Child Loggers</h3>
+            <pre><code>-- Create child with inherited context
 child := log.child_with_field ("module", "auth")
 child.info ("Processing request")
 -- Includes: module=auth plus any parent fields</code></pre>
 
-    <h2>Duration Logging</h2>
-    <pre><code>log.start_timer
+            <h3>Duration Logging</h3>
+            <pre><code>log.start_timer
 -- ... expensive operation ...
 log.log_duration ("Operation completed")</code></pre>
+        </section>
 
-    <h2>API Reference</h2>
+        <section id="api">
+            <h2>API Reference</h2>
+            
+            <h3>Log Levels</h3>
+            <table>
+                <tr><th>Level</th><th>Feature</th><th>Use Case</th></tr>
+                <tr><td>DEBUG</td><td><code>debug_msg</code></td><td>Verbose debugging info</td></tr>
+                <tr><td>INFO</td><td><code>info</code></td><td>Normal operational messages</td></tr>
+                <tr><td>WARN</td><td><code>warn</code></td><td>Warning conditions</td></tr>
+                <tr><td>ERROR</td><td><code>error</code></td><td>Error conditions</td></tr>
+                <tr><td>FATAL</td><td><code>fatal</code></td><td>System failure</td></tr>
+            </table>
 
-    <h3>Log Levels</h3>
-    <table>
-        <tr><th>Level</th><th>Feature</th><th>Use Case</th></tr>
-        <tr><td>DEBUG</td><td><code>debug_msg</code></td><td>Verbose debugging info</td></tr>
-        <tr><td>INFO</td><td><code>info</code></td><td>Normal operational messages</td></tr>
-        <tr><td>WARN</td><td><code>warn</code></td><td>Warning conditions</td></tr>
-        <tr><td>ERROR</td><td><code>error</code></td><td>Error conditions</td></tr>
-        <tr><td>FATAL</td><td><code>fatal</code></td><td>System failure</td></tr>
-    </table>
+            <div class="api-section">
+                <h3>make</h3>
+                <div class="signature">create log.make</div>
+                <p>Create logger with default INFO level and console output.</p>
+                <div class="contracts">
+                    <h4>Ensure</h4>
+                    <div class="ensure">level_is_info: level = Level_info</div>
+                    <div class="ensure">outputs_to_console: is_console_output</div>
+                </div>
+            </div>
 
-    <h3>Configuration</h3>
-    <table>
-        <tr><th>Feature</th><th>Description</th></tr>
-        <tr><td><code>set_level (level)</code></td><td>Set minimum log level</td></tr>
-        <tr><td><code>set_json_output (bool)</code></td><td>Enable/disable JSON format</td></tr>
-        <tr><td><code>set_file_output (path)</code></td><td>Log to file</td></tr>
-    </table>
+            <div class="api-section">
+                <h3>with_field (a_key, a_value: STRING)</h3>
+                <div class="signature">log.with_field ("user", "alice")</div>
+                <p>Add field to next log entry. Returns self for chaining.</p>
+            </div>
 
-    <h3>Structured Logging</h3>
-    <table>
-        <tr><th>Feature</th><th>Description</th></tr>
-        <tr><td><code>with_field (key, value)</code></td><td>Add field to next log entry</td></tr>
-        <tr><td><code>with_error (err)</code></td><td>Add error field</td></tr>
-        <tr><td><code>child_with_field (key, value)</code></td><td>Create child logger with field</td></tr>
-    </table>
+            <div class="api-section">
+                <h3>child_with_field (a_key, a_value: STRING): SIMPLE_LOGGER</h3>
+                <div class="signature">child := log.child_with_field ("module", "auth")</div>
+                <p>Create child logger with inherited context plus new field.</p>
+            </div>
 
-    <h3>Timing</h3>
-    <table>
-        <tr><th>Feature</th><th>Description</th></tr>
-        <tr><td><code>start_timer</code></td><td>Start timing</td></tr>
-        <tr><td><code>log_duration (msg)</code></td><td>Log elapsed time</td></tr>
-        <tr><td><code>enter (feature_name)</code></td><td>Log entry with indent</td></tr>
-        <tr><td><code>exit (feature_name)</code></td><td>Log exit with dedent</td></tr>
-    </table>
+            <h3>Configuration</h3>
+            <table>
+                <tr><th>Feature</th><th>Description</th></tr>
+                <tr><td><code>set_level (level)</code></td><td>Set minimum log level</td></tr>
+                <tr><td><code>set_json_output (bool)</code></td><td>Enable/disable JSON format</td></tr>
+                <tr><td><code>set_file_output (path)</code></td><td>Log to file</td></tr>
+            </table>
 
-    <h2>Dependencies</h2>
-    <ul>
-        <li><a href="https://ljr1981.github.io/simple_json/">simple_json</a> - For JSON output format</li>
-    </ul>
+            <h3>Timing</h3>
+            <table>
+                <tr><th>Feature</th><th>Description</th></tr>
+                <tr><td><code>start_timer</code></td><td>Start timing</td></tr>
+                <tr><td><code>log_duration (msg)</code></td><td>Log elapsed time</td></tr>
+                <tr><td><code>enter (feature_name)</code></td><td>Log entry with indent</td></tr>
+                <tr><td><code>exit (feature_name)</code></td><td>Log exit with dedent</td></tr>
+            </table>
+        </section>
+    </main>
 
-    <h2>License</h2>
-    <p>MIT License - Copyright (c) 2024-2025, Larry Rix</p>
-
-    <hr>
-    <p><a href="https://github.com/ljr1981/simple_logger">GitHub Repository</a></p>
+    <footer>
+        <p>Part of the <a href="https://github.com/ljr1981">simple_*</a> library collection</p>
+        <p>Depends on: <a href="https://ljr1981.github.io/simple_json/">simple_json</a></p>
+        <p class="copyright">MIT License - Copyright (c) 2024-2025, Larry Rix</p>
+    </footer>
 </body>
 </html>
