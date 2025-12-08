@@ -404,8 +404,6 @@ feature {SIMPLE_LOGGER} -- Implementation (shared with child loggers)
 
 	setup_console_writer
 			-- Set up console output writer.
-		local
-			l_writer: LOG_WRITER_FILE
 		do
 			-- Use stdout via Eiffel facility
 			-- Note: LOG_LOGGING_FACILITY writes to registered writers
