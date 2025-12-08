@@ -12,6 +12,10 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="dead_code_removal" value="feature"/>
+		<capability>
+			<concurrency support="scoop" use="thread"/>
+			<void_safety support="all"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf"/>
@@ -21,8 +25,7 @@
 	<target name="simple_logger_tests" extends="simple_logger">
 		<description>Test target for simple_logger</description>
 		<root class="LOGGER_TEST_APP" feature="make"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<library name="testing_ext" location="$TESTING_EXT\testing_ext.ecf"/>
+		<library name="simple_testing" location="$SIMPLE_TESTING\simple_testing.ecf"/>
 		<cluster name="tests" location=".\tests\" recursive="true"/>
 	</target>
 </system>
