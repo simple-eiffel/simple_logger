@@ -4,7 +4,7 @@
 
 # simple_logger
 
-**[Documentation](https://ljr1981.github.io/simple_logger/)** | **[GitHub](https://github.com/ljr1981/simple_logger)**
+**[Documentation](https://simple-eiffel.github.io/simple_logger/)** | **[GitHub](https://github.com/simple-eiffel/simple_logger)**
 
 Enhanced logging facade for Eiffel with structured fields and JSON output. Wraps EiffelStudio's logging library with a cleaner API.
 
@@ -32,7 +32,7 @@ Enhanced logging facade for Eiffel with structured fields and JSON output. Wraps
 
 | Library | Purpose | Environment Variable |
 |---------|---------|---------------------|
-| [simple_json](https://github.com/ljr1981/simple_json) | JSON output format | `$SIMPLE_JSON` |
+| [simple_json](https://github.com/simple-eiffel/simple_json) | JSON output format | `$SIMPLE_JSON` |
 
 ## Quick Start
 
