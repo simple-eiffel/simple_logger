@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="generator" content="ISE EiffelStudio version 25.02.9.8732 - win64">
+<meta name="description" content="Timer for measuring operation duration in logging"/>
+<meta name="author" content="Larry Rix with Claude (Anthropic)"/>
+<meta name="keywords" content="Eiffel class"/>
+<meta name="copyright" content="Copyright (c) 2024-2025, Larry Rix"/>
+<meta name="license" content="MIT License"/>
+<meta name="keywords" content="Eiffel class"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+<title>simple_log_timer Contracts</title>
+<link rel="stylesheet" href="../default.css" type="text/css">
+<script type="text/javascript" src="../goto.html"></script>
+</head>
+<body>
+<pre></pre><form class="nav" onsubmit="go_to('../',this.c.value);return false;">
+<div class="nav">
+<a class="nav hierarchy" href="../class_list.html">Classes</a>
+<a class="nav hierarchy" href="../cluster_list.html">Clusters</a>
+<a class="nav hierarchy" href="../cluster_hierarchy.html">Cluster hierarchy</a>
+<a class="nav class" href="simple_log_timer_chart.html">Chart</a>
+<a class="nav class" href="simple_log_timer_links.html">Relations</a>
+<span class="nav class selected">Contracts</span>
+<span class="nav class goto">Go to: <input name="c" value="simple_log_timer"></span>
+</div></form><pre><span class="ekeyword">note</span>
+	<span class="eitag">description</span><span class="esymbol">:</span> <span class="estring">&quot;Timer for measuring operation duration in logging&quot;</span>
+	<span class="eitag">author</span><span class="esymbol">:</span> <span class="estring">&quot;Larry Rix with Claude (Anthropic)&quot;</span>
+	<span class="eitag">date</span><span class="esymbol">:</span> <span class="estring">&quot;$Date$&quot;</span>
+	<span class="eitag">revision</span><span class="esymbol">:</span> <span class="estring">&quot;$Revision$&quot;</span>
+
+<span class="ekeyword">class</span> <span class="ekeyword">interface</span>
+	<a class="eclass" href="../src/simple_log_timer_short.html">SIMPLE_LOG_TIMER</a>
+
+<span class="ekeyword">create</span> 
+	<a class="efeature" href="../src/simple_log_timer_short.html#f_make">make</a>
+
+<span class="ekeyword">feature</span> <span class="ecomment">--</span><span class="ecomment"> Access</span>
+
+	<a name="f_start_time"></a><a class="efeature" href="../src/simple_log_timer_short.html#f_start_time">start_time</a><span class="esymbol">:</span> <a class="eclass" href="../time/date_time_short.html">DATE_TIME</a>
+			<span class="ecomment">--</span><span class="ecomment"> When the timer was started.</span>
+
+	<a name="f_elapsed_ms"></a><a class="efeature" href="../src/simple_log_timer_short.html#f_elapsed_ms">elapsed_ms</a><span class="esymbol">:</span> <a class="eclass" href="../base/integer_64_short.html">INTEGER_64</a>
+			<span class="ecomment">--</span><span class="ecomment"> Milliseconds elapsed since timer started.</span>
+		<span class="ekeyword">ensure</span>
+			<span class="etag">non_negative</span><span class="esymbol">:</span> <span class="ekeyword">Result</span> <a class="esymbol" href="../base/comparable_short.html#f_is_greater_equal">&gt;=</a> <span class="enumber">0</span>
+
+	<a name="f_elapsed_seconds"></a><a class="efeature" href="../src/simple_log_timer_short.html#f_elapsed_seconds">elapsed_seconds</a><span class="esymbol">:</span> <a class="eclass" href="../base/real_64_short.html">REAL_64</a>
+			<span class="ecomment">--</span><span class="ecomment"> Seconds elapsed since timer started (with fractional part).</span>
+		<span class="ekeyword">ensure</span>
+			<span class="etag">non_negative</span><span class="esymbol">:</span> <span class="ekeyword">Result</span> <a class="esymbol" href="../base/comparable_short.html#f_is_greater_equal">&gt;=</a> <span class="enumber">0.0</span>
+
+	<a name="f_elapsed_formatted"></a><a class="efeature" href="../src/simple_log_timer_short.html#f_elapsed_formatted">elapsed_formatted</a><span class="esymbol">:</span> <a class="eclass" href="../base/string_8_short.html">STRING_8</a>
+			<span class="ecomment">--</span><span class="ecomment"> Human-readable elapsed time string.</span>
+		<span class="ekeyword">ensure</span>
+			<span class="etag">not_empty</span><span class="esymbol">:</span> <a class="ekeyword" href="../base/boolean_short.html#f_negated">not</a> <span class="ekeyword">Result</span><span class="edot">.</span><a class="efeature" href="../base/finite_short.html#f_is_empty">is_empty</a>
+	
+<span class="ekeyword">feature</span> <span class="ecomment">--</span><span class="ecomment"> Operations</span>
+
+	<a name="f_reset"></a><a class="efeature" href="../src/simple_log_timer_short.html#f_reset">reset</a>
+			<span class="ecomment">--</span><span class="ecomment"> Reset the timer to current time.</span>
+		<span class="ekeyword">ensure</span>
+			<span class="etag">reset</span><span class="esymbol">:</span> <a class="efeature" href="../src/simple_log_timer_short.html#f_elapsed_ms">elapsed_ms</a> <a class="esymbol" href="../base/integer_64_short.html#f_is_less">&lt;</a> <span class="enumber">100</span>
+	
+<span class="ekeyword">invariant</span>
+	<span class="etag">start_time_not_void</span><span class="esymbol">:</span> <a class="efeature" href="../src/simple_log_timer_short.html#f_start_time">start_time</a> <span class="esymbol">/=</span> <span class="ekeyword">Void</span>
+
+<span class="ekeyword">note</span>
+	<span class="eitag">copyright</span><span class="esymbol">:</span> <span class="estring">&quot;Copyright (c) 2024-2025, Larry Rix&quot;</span>
+	<span class="eitag">license</span><span class="esymbol">:</span> <span class="estring">&quot;MIT License&quot;</span>
+
+<span class="ekeyword">end</span> <span class="ecomment">--</span> <span class="ecomment">class </span><a class="eclass" href="../src/simple_log_timer_short.html">SIMPLE_LOG_TIMER</a></pre><form class="nav" onsubmit="go_to('../',this.c.value);return false;">
+<div class="nav">
+<a class="nav hierarchy" href="../class_list.html">Classes</a>
+<a class="nav hierarchy" href="../cluster_list.html">Clusters</a>
+<a class="nav hierarchy" href="../cluster_hierarchy.html">Cluster hierarchy</a>
+<a class="nav class" href="simple_log_timer_chart.html">Chart</a>
+<a class="nav class" href="simple_log_timer_links.html">Relations</a>
+<span class="nav class selected">Contracts</span>
+<span class="nav class goto">Go to: <input name="c" value="simple_log_timer"></span>
+</div></form><pre></pre>
+<p style="text-align:center;">Generated by <a href="http://www.eiffel.com">ISE EiffelStudio</a></p>
+</body>
+</html>
+
