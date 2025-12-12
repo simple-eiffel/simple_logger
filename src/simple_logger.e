@@ -163,7 +163,9 @@ feature -- Access
 
 feature -- Configuration
 
-	set_level (a_level: INTEGER)
+	set_level,
+	set_log_level,
+	configure_level (a_level: INTEGER)
 			-- Set minimum log level.
 		require
 			valid_level: a_level >= Level_debug and a_level <= Level_fatal
@@ -181,7 +183,9 @@ feature -- Configuration
 			json_set: is_json_output = a_enabled
 		end
 
-	add_context (a_key: STRING; a_value: ANY)
+	add_context,
+	set_field,
+	with_field (a_key: STRING; a_value: ANY)
 			-- Add a context field that appears in all subsequent logs.
 		require
 			key_not_empty: not a_key.is_empty
@@ -205,7 +209,9 @@ feature -- Configuration
 
 feature -- Logging (Simple)
 
-	debug_log (a_message: STRING)
+	debug_log,
+	trace,
+	verbose (a_message: STRING)
 			-- Log debug message.
 		require
 			message_not_void: a_message /= Void
@@ -213,7 +219,10 @@ feature -- Logging (Simple)
 			log_at_level (Level_debug, a_message, Void)
 		end
 
-	info (a_message: STRING)
+	info,
+	log,
+	log_info,
+	message (a_message: STRING)
 			-- Log info message.
 		require
 			message_not_void: a_message /= Void
@@ -221,7 +230,9 @@ feature -- Logging (Simple)
 			log_at_level (Level_info, a_message, Void)
 		end
 
-	warn (a_message: STRING)
+	warn,
+	warning,
+	log_warn (a_message: STRING)
 			-- Log warning message.
 		require
 			message_not_void: a_message /= Void
@@ -229,7 +240,9 @@ feature -- Logging (Simple)
 			log_at_level (Level_warn, a_message, Void)
 		end
 
-	error (a_message: STRING)
+	error,
+	log_error,
+	err (a_message: STRING)
 			-- Log error message.
 		require
 			message_not_void: a_message /= Void
