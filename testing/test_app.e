@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	LOGGER_TEST_APP
+	TEST_APP
 
 create
 	make
@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 	make
 			-- Run tests.
 		local
-			tests: LOGGER_TEST_SET
+			tests: LIB_TESTS
 		do
 			create tests
 			io.put_string ("simple_logger test runner%N")
