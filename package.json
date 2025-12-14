@@ -1,0 +1,9 @@
+{
+  "name": "simple_logger",
+  "version": "0.1.0",
+  "description": "Simple Logger - Enhanced logging facade with structured fields and JSON output",
+  "author": "Larry Rix",
+  "license": "MIT",
+  "category": "utilities",
+  "keywords": ["logging", "debug", "trace", "output"]
+}
