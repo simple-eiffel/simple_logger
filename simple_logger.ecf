@@ -17,7 +17,7 @@
 			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="simple_datetime" location="$SIMPLE_DATETIME/simple_datetime.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf"/>
 		<library name="simple_json" location="$SIMPLE_JSON\simple_json.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>

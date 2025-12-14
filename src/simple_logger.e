@@ -499,14 +499,14 @@ feature {SIMPLE_LOGGER} -- Implementation (shared with child loggers)
 	format_plain (a_level: INTEGER; a_message: STRING; a_fields: HASH_TABLE [ANY, STRING]): STRING
 			-- Format log entry as plain text.
 		local
-			l_time: DATE_TIME
+			l_time: SIMPLE_DATE_TIME
 			i: INTEGER
 		do
 			create Result.make (200)
 
 			-- Timestamp
 			create l_time.make_now
-			Result.append (l_time.formatted_out ("yyyy-[0]mm-[0]dd [0]hh:[0]mi:[0]ss"))
+			Result.append (l_time.to_iso8601)
 			Result.append (" ")
 
 			-- Level
@@ -549,7 +549,7 @@ feature {SIMPLE_LOGGER} -- Implementation (shared with child loggers)
 			-- Format log entry as JSON using SIMPLE_JSON_OBJECT fluent builder.
 			-- Leverages simple_json for proper escaping and type handling.
 		local
-			l_time: DATE_TIME
+			l_time: SIMPLE_DATE_TIME
 			l_json: SIMPLE_JSON_OBJECT
 			l_timestamp: STRING
 		do
@@ -557,11 +557,7 @@ feature {SIMPLE_LOGGER} -- Implementation (shared with child loggers)
 
 			-- Timestamp (ISO 8601)
 			create l_time.make_now
-			create l_timestamp.make (25)
-			l_timestamp.append (l_time.formatted_out ("yyyy-[0]mm-[0]dd"))
-			l_timestamp.append ("T")
-			l_timestamp.append (l_time.formatted_out ("[0]hh:[0]mi:[0]ss"))
-			l_timestamp.append ("Z")
+			l_timestamp := l_time.to_iso8601_utc
 
 			-- Build JSON using fluent API - chain calls, handles all escaping automatically
 			l_json := l_json.put_string (l_timestamp, "timestamp")

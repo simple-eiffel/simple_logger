@@ -22,20 +22,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_time: DATE_TIME
+	start_time: SIMPLE_DATE_TIME
 			-- When the timer was started.
 
 	elapsed_ms: INTEGER_64
 			-- Milliseconds elapsed since timer started.
+			-- Note: Resolution is seconds due to SIMPLE_DATE_TIME precision.
 		local
-			l_now: DATE_TIME
-			l_duration: DATE_TIME_DURATION
+			l_now: SIMPLE_DATE_TIME
 		do
 			create l_now.make_now
-			l_duration := l_now.relative_duration (start_time)
-			-- Convert to milliseconds
-			Result := l_duration.seconds_count * 1000 +
-			          (l_duration.fine_second * 1000).truncated_to_integer
+			Result := (l_now.to_timestamp - start_time.to_timestamp) * 1000
 		ensure
 			non_negative: Result >= 0
 		end
