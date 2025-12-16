@@ -21,11 +21,11 @@ Enhanced logging facade for Eiffel with structured fields and JSON output. Wraps
 ## Installation
 
 1. Clone the repository
-2. Set environment variable: `SIMPLE_LOGGER=D:\path\to\simple_logger`
+2. Set environment variable (one-time setup for all simple_* libraries): `SIMPLE_EIFFEL=D:\prod`
 3. Add to your ECF:
 
 ```xml
-<library name="simple_logger" location="$SIMPLE_LOGGER\simple_logger.ecf"/>
+<library name="simple_logger" location="$SIMPLE_EIFFEL/simple_logger/simple_logger.ecf"/>
 ```
 
 ## Dependencies
