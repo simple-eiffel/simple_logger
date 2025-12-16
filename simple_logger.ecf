@@ -17,15 +17,15 @@
 			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="simple_datetime" location="$SIMPLE_DATETIME/simple_datetime.ecf"/>
+		<library name="simple_datetime" location="$SIMPLE_EIFFEL/simple_datetime/simple_datetime.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf"/>
-		<library name="simple_json" location="$SIMPLE_JSON\simple_json.ecf"/>
+		<library name="simple_json" location="$SIMPLE_EIFFEL/simple_json/simple_json.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="simple_logger_tests" extends="simple_logger">
 		<description>Test target for simple_logger</description>
 		<root class="TEST_APP" feature="make"/>
-		<library name="simple_testing" location="$SIMPLE_TESTING\simple_testing.ecf"/>
+		<library name="simple_testing" location="$SIMPLE_EIFFEL/simple_testing/simple_testing.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="test_classes" location=".\testing\" recursive="true"/>
 	</target>
