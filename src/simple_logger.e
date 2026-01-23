@@ -17,6 +17,9 @@ note
 		JSON Output:
 			log.set_json_output (True)
 			-- {"timestamp":"2025-12-06T14:30:00","level":"info","message":"Started"}
+
+		Model Queries:
+			model_context -- MML_MAP view of context_fields for contract specifications
 	]"
 	author: "Larry Rix with Claude (Anthropic)"
 	date: "$Date$"
@@ -91,9 +94,9 @@ feature {NONE} -- Initialization
 
 	make_child (a_parent: SIMPLE_LOGGER; a_context: HASH_TABLE [ANY, STRING])
 			-- Create child logger inheriting parent's settings and context.
-		require
-			parent_not_void: a_parent /= Void
-			context_not_void: a_context /= Void
+			-- Child context overrides parent context for same keys (map override semantics).
+		local
+			l_child_map: MML_MAP [STRING, detachable separate ANY]
 		do
 			level := a_parent.level
 			is_console_output := a_parent.is_console_output
@@ -101,7 +104,7 @@ feature {NONE} -- Initialization
 			is_json_output := a_parent.is_json_output
 			file_path := a_parent.file_path
 			eiffel_facility := a_parent.eiffel_facility
-			-- Merge parent context with new context
+			-- Merge parent context with new context (child overrides parent)
 			create context_fields.make (a_parent.context_fields.count + a_context.count)
 			from
 				a_parent.context_fields.start
@@ -119,9 +122,24 @@ feature {NONE} -- Initialization
 				context_fields.force (a_context.item_for_iteration, a_context.key_for_iteration)
 				a_context.forth
 			end
+			-- Build model of child context for postcondition verification
+			create l_child_map
+			from a_context.start until a_context.off loop
+				l_child_map := l_child_map.updated (a_context.key_for_iteration, a_context.item_for_iteration)
+				a_context.forth
+			end
 		ensure
 			inherits_level: level = a_parent.level
-			has_context: context_fields.count >= a_context.count
+			inherits_console: is_console_output = a_parent.is_console_output
+			inherits_file: is_file_output = a_parent.is_file_output
+			inherits_json: is_json_output = a_parent.is_json_output
+			-- Model-based: result is parent context overridden by child context
+			context_is_override: model_context |=| (a_parent.model_context + hash_to_model (a_context))
+			-- Context contains all merged keys
+			merged_count: context_fields.count >= a_context.count
+			-- All keys in context_fields
+			has_parent_keys: a_parent.context_fields.current_keys.for_all (agent context_fields.has)
+			has_child_keys: a_context.current_keys.for_all (agent context_fields.has)
 		end
 
 feature -- Log Levels (Constants)
@@ -161,6 +179,34 @@ feature -- Access
 	context_fields: HASH_TABLE [ANY, STRING]
 			-- Fields inherited by this logger (from parent or set directly).
 
+feature -- Model Queries (for contracts)
+
+	model_context: MML_MAP [STRING, detachable separate ANY]
+			-- Mathematical model of context_fields.
+			-- Used in postconditions to specify context inheritance and merging.
+		local
+			l_result: MML_MAP [STRING, detachable separate ANY]
+		do
+			create l_result
+			from
+				context_fields.start
+			until
+				context_fields.off
+			loop
+				l_result := l_result.updated (context_fields.key_for_iteration, context_fields.item_for_iteration)
+				context_fields.forth
+			end
+			Result := l_result
+		ensure
+			same_count: Result.count = context_fields.count
+		end
+
+	frozen old_model_context: detachable MML_MAP [STRING, detachable separate ANY]
+			-- Snapshot of model_context for old expression in postconditions.
+			-- Set by features that modify context to capture pre-state.
+		attribute
+		end
+
 feature -- Configuration
 
 	set_level,
@@ -187,12 +233,18 @@ feature -- Configuration
 	set_field,
 	with_field (a_key: STRING; a_value: ANY)
 			-- Add a context field that appears in all subsequent logs.
+			-- If key exists, value is replaced (map override semantics).
 		require
 			key_not_empty: not a_key.is_empty
 		do
 			context_fields.force (a_value, a_key)
 		ensure
 			field_added: context_fields.has (a_key)
+			value_set: context_fields.item (a_key) = a_value
+			-- Model-based: new context is old context updated with new key-value
+			model_updated: model_context |=| (old model_context).updated (a_key, a_value)
+			-- Count increases by at most 1
+			count_bounded: model_context.count <= (old model_context).count + 1
 		end
 
 	add_file_output (a_path: STRING)
@@ -213,8 +265,7 @@ feature -- Logging (Simple)
 	trace,
 	verbose (a_message: STRING)
 			-- Log debug message.
-		require
-			message_not_void: a_message /= Void
+			-- (void-safe: a_message attachment guaranteed by type system)
 		do
 			log_at_level (Level_debug, a_message, Void)
 		end
@@ -224,8 +275,7 @@ feature -- Logging (Simple)
 	log_info,
 	message (a_message: STRING)
 			-- Log info message.
-		require
-			message_not_void: a_message /= Void
+			-- (void-safe: a_message attachment guaranteed by type system)
 		do
 			log_at_level (Level_info, a_message, Void)
 		end
@@ -234,8 +284,7 @@ feature -- Logging (Simple)
 	warning,
 	log_warn (a_message: STRING)
 			-- Log warning message.
-		require
-			message_not_void: a_message /= Void
+			-- (void-safe: a_message attachment guaranteed by type system)
 		do
 			log_at_level (Level_warn, a_message, Void)
 		end
@@ -244,16 +293,14 @@ feature -- Logging (Simple)
 	log_error,
 	err (a_message: STRING)
 			-- Log error message.
-		require
-			message_not_void: a_message /= Void
+			-- (void-safe: a_message attachment guaranteed by type system)
 		do
 			log_at_level (Level_error, a_message, Void)
 		end
 
 	fatal (a_message: STRING)
 			-- Log fatal message.
-		require
-			message_not_void: a_message /= Void
+			-- (void-safe: a_message attachment guaranteed by type system)
 		do
 			log_at_level (Level_fatal, a_message, Void)
 		end
@@ -262,45 +309,35 @@ feature -- Logging (Structured with HASH_TABLE)
 
 	debug_with (a_message: STRING; a_fields: HASH_TABLE [ANY, STRING])
 			-- Log debug with structured fields.
-		require
-			message_not_void: a_message /= Void
-			fields_not_void: a_fields /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			log_at_level (Level_debug, a_message, a_fields)
 		end
 
 	info_with (a_message: STRING; a_fields: HASH_TABLE [ANY, STRING])
 			-- Log info with structured fields.
-		require
-			message_not_void: a_message /= Void
-			fields_not_void: a_fields /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			log_at_level (Level_info, a_message, a_fields)
 		end
 
 	warn_with (a_message: STRING; a_fields: HASH_TABLE [ANY, STRING])
 			-- Log warning with structured fields.
-		require
-			message_not_void: a_message /= Void
-			fields_not_void: a_fields /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			log_at_level (Level_warn, a_message, a_fields)
 		end
 
 	error_with (a_message: STRING; a_fields: HASH_TABLE [ANY, STRING])
 			-- Log error with structured fields.
-		require
-			message_not_void: a_message /= Void
-			fields_not_void: a_fields /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			log_at_level (Level_error, a_message, a_fields)
 		end
 
 	fatal_with (a_message: STRING; a_fields: HASH_TABLE [ANY, STRING])
 			-- Log fatal with structured fields.
-		require
-			message_not_void: a_message /= Void
-			fields_not_void: a_fields /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			log_at_level (Level_fatal, a_message, a_fields)
 		end
@@ -309,18 +346,14 @@ feature -- Logging (Structured with ARRAY convenience)
 
 	info_fields (a_message: STRING; a_fields: ARRAY [TUPLE [key: STRING; value: ANY]])
 			-- Log info with fields as array of tuples (convenience).
-		require
-			message_not_void: a_message /= Void
-			fields_not_void: a_fields /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			log_at_level (Level_info, a_message, tuple_array_to_hash (a_fields))
 		end
 
 	error_fields (a_message: STRING; a_fields: ARRAY [TUPLE [key: STRING; value: ANY]])
 			-- Log error with fields as array of tuples (convenience).
-		require
-			message_not_void: a_message /= Void
-			fields_not_void: a_fields /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			log_at_level (Level_error, a_message, tuple_array_to_hash (a_fields))
 		end
@@ -330,12 +363,16 @@ feature -- Child Loggers
 	child (a_context: HASH_TABLE [ANY, STRING]): SIMPLE_LOGGER
 			-- Create child logger with inherited context.
 			-- All logs from child will include parent's context fields.
-		require
-			context_not_void: a_context /= Void
+			-- Child context overrides parent context for same keys (map override semantics).
+			-- (void-safe: attachment guaranteed by type system)
 		do
 			create Result.make_child (Current, a_context)
 		ensure
 			inherits_level: Result.level = level
+			inherits_console: Result.is_console_output = is_console_output
+			inherits_json: Result.is_json_output = is_json_output
+			-- Model-based: child context is parent overridden by new context
+			child_context_is_override: Result.model_context |=| (model_context + hash_to_model (a_context))
 		end
 
 	child_with (a_key: STRING; a_value: ANY): SIMPLE_LOGGER
@@ -385,14 +422,13 @@ feature -- Timing
 		do
 			create Result.make
 		ensure
-			timer_started: Result /= Void
+			-- (void-safe: Result attachment guaranteed by type system)
+			timer_ready: Result.elapsed_ms >= 0
 		end
 
 	log_duration (a_timer: SIMPLE_LOG_TIMER; a_message: STRING)
 			-- Log info message with duration from timer.
-		require
-			timer_not_void: a_timer /= Void
-			message_not_void: a_message /= Void
+			-- (void-safe: attachment guaranteed by type system)
 		local
 			l_fields: HASH_TABLE [ANY, STRING]
 		do
@@ -670,11 +706,35 @@ feature {SIMPLE_LOGGER} -- Implementation (shared with child loggers)
 			end
 		end
 
+	hash_to_model (a_hash: HASH_TABLE [ANY, STRING]): MML_MAP [STRING, detachable separate ANY]
+			-- Convert HASH_TABLE to MML_MAP for contract specifications.
+		do
+			create Result
+			from
+				a_hash.start
+			until
+				a_hash.off
+			loop
+				Result := Result.updated (a_hash.key_for_iteration, a_hash.item_for_iteration)
+				a_hash.forth
+			end
+		ensure
+			same_count: Result.count = a_hash.count
+		end
+
 invariant
+	-- Level must be within valid range
 	valid_level: level >= Level_debug and level <= Level_fatal
-	context_not_void: context_fields /= Void
-	facility_not_void: eiffel_facility /= Void
+
+	-- Structural invariants (void-safety makes these redundant but explicit)
+	context_exists: attached context_fields
+	facility_exists: attached eiffel_facility
+
+	-- Indent level must be non-negative
 	non_negative_indent: indent_level >= 0
+
+	-- Model-based invariant: model_context accurately reflects context_fields
+	model_reflects_fields: model_context.count = context_fields.count
 
 note
 	copyright: "Copyright (c) 2024-2025, Larry Rix"
