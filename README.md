@@ -4,6 +4,8 @@
 
 # simple_logger
 
+![Windows: tests pass](https://img.shields.io/badge/Windows-tests%20pass-0078D6?logo=windows&logoColor=white) ![Linux: tests pass](https://img.shields.io/badge/Linux-tests%20pass-FCC624?logo=linux&logoColor=black) ![macOS: tests pass](https://img.shields.io/badge/macOS-tests%20pass-000000?logo=apple&logoColor=white)
+
 **[Documentation](https://simple-eiffel.github.io/simple_logger/)** | **[GitHub](https://github.com/simple-eiffel/simple_logger)**
 
 Enhanced logging facade for Eiffel with structured fields and JSON output. Wraps EiffelStudio's logging library with a cleaner API.
